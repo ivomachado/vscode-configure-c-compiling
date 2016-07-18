@@ -17,3 +17,11 @@ You need MinGW or other fork in Windows and the C/C++ extension for VSCode.
 This extension contributes the following settings:
 
 * `configure-c-compiling.mingwPath`: Sets the full path to MinGW folder in Windows
+
+## Release Notes
+
+### 0.1.1
+    Correction of task command in Linux
+
+### 0.1.0
+    Initial Release

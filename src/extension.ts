@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
                 "targetArchitecture": "x64",
                 "program": "${workspaceRoot}/a",
                 "args": [],
-                "preLaunchTask": "mingw32-make",
+                "preLaunchTask": "make",
                 "stopAtEntry": false,
                 "cwd": "${workspaceRoot}",
                 "environment": [],
@@ -52,11 +52,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     let tasks_json_content: any = {
         "version": "0.1.0",
-        "command": "mingw32-make",
+        "command": "make",
         "isShellCommand": true,
         "args": [],
         "showOutput": "always"
     };
+    if (process.platform == 'win32') {
+        launch_json_content.configurations[0].program += '.exe';
+        launch_json_content.configurations[0].preLaunchTask = tasks_json_content.command = "mingw32-make";
+    }
 
     let makefile_content: string = 'CFLAGS = -Wall -g\nSRC=$(wildcard *.c)\nHEADERS=$(wildcard *.h)\na: $(HEADERS) $(SRC) ; gcc -o $@ $^ $(CFLAGS)';
 
@@ -66,10 +70,11 @@ export function activate(context: vscode.ExtensionContext) {
             let mingw_path: string = vscode.workspace.getConfiguration('configure-c-compiling')['mingwPath'];
             if (mingw_path.endsWith('/')) mingw_path = mingw_path.substring(0, mingw_path.length - 1);
             launch_json_content.configurations[0].miDebuggerPath = mingw_path + '/bin/gdb.exe';
-            launch_json_content.configurations[0].program += '.exe';
         }
-        fs.writeFile(vscode.workspace.rootPath + '/.vscode/launch.json', JSON.stringify(launch_json_content));
-        fs.writeFile(vscode.workspace.rootPath + '/.vscode/tasks.json', JSON.stringify(tasks_json_content));
+        fs.mkdir(vscode.workspace.rootPath + '.vscode/', (e) => {
+            fs.writeFile(vscode.workspace.rootPath + '/.vscode/launch.json', JSON.stringify(launch_json_content));
+            fs.writeFile(vscode.workspace.rootPath + '/.vscode/tasks.json', JSON.stringify(tasks_json_content));
+        });
     });
 
     context.subscriptions.push(disposable);
