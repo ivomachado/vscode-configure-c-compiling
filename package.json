@@ -1,0 +1,44 @@
+{
+    "name": "configure-c-compiling",
+    "displayName": "Configure C Compiling",
+    "description": "Automatic generation of launch.json, tasks.json  and makefile to compile C files and small projects inside VS Code",
+    "version": "0.0.1",
+    "publisher": "ivomachado",
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:configure-c-compiling.generateConfigurations"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "configure-c-compiling.generateConfigurations",
+                "title": "Configure C Compiling: Generate Configurations"
+            }
+        ],
+        "configuration": {
+            "title": "Configuração relacionadas à extensão",
+            "properties": {
+                "configure-c-compiling.mingwPath": {
+                    "type": "string",
+                    "default": "C:/MinGW/",
+                    "title": "Full Path do MinGW Folder"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "typescript": "^1.8.5",
+        "vscode": "^0.11.0"
+    }
+}
