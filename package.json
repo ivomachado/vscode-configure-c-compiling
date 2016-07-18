@@ -2,7 +2,7 @@
     "name": "configure-c-compiling",
     "displayName": "Configure C Compiling",
     "description": "Automatic generation of launch.json, tasks.json  and makefile to compile C files and small projects inside VS Code",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/ivomachado/vscode-configure-c-compiling.git"
