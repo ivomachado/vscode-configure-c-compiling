@@ -57,6 +57,31 @@ export function activate(context: vscode.ExtensionContext) {
         "args": [],
         "showOutput": "always"
     };
+
+    let c_settings: any = {
+        "configurations": [
+            {
+                "name": "Mac",
+                "includePath": ["/usr/include"]
+            },
+            {
+                "name": "Linux",
+                "includePath": ["/usr/include"]
+            },
+            {
+                "name": "Win32",
+                "includePath": [
+                    "/x86_64-w64-mingw32/include",
+                    "/x86_64-w64-mingw32/include/sys"
+                ]
+            }
+        ],
+        "clang_format": {
+            "style": "file",
+            "fallback-style": "WebKit",
+            "sort-includes": true
+        }
+    }
     if (process.platform == 'win32') {
         launch_json_content.configurations[0].program += '.exe';
         launch_json_content.configurations[0].preLaunchTask = tasks_json_content.command = "mingw32-make";
@@ -66,14 +91,26 @@ export function activate(context: vscode.ExtensionContext) {
 
     let disposable = vscode.commands.registerCommand('configure-c-compiling.generateConfigurations', () => {
         fs.writeFile(vscode.workspace.rootPath + '/makefile', makefile_content);
+        let new_c_settings: any = null;
         if (process.platform == 'win32') {
+            new_c_settings = {};
+            Object.assign(new_c_settings, c_settings);
+            new_c_settings.valid = true;
+            let includePath: Array<string> = new_c_settings.configurations[2].includePath;
             let mingw_path: string = vscode.workspace.getConfiguration('configure-c-compiling')['mingwPath'];
             if (mingw_path.endsWith('/')) mingw_path = mingw_path.substring(0, mingw_path.length - 1);
             launch_json_content.configurations[0].miDebuggerPath = mingw_path + '/bin/gdb.exe';
+            for (let i: number = 0; i < includePath.length; i++) {
+                includePath[i] = mingw_path + includePath[i];
+            }
         }
         fs.mkdir(vscode.workspace.rootPath + '.vscode/', (e) => {
             fs.writeFile(vscode.workspace.rootPath + '/.vscode/launch.json', JSON.stringify(launch_json_content));
             fs.writeFile(vscode.workspace.rootPath + '/.vscode/tasks.json', JSON.stringify(tasks_json_content));
+            if (new_c_settings.valid) {
+                delete new_c_settings.valid;
+                fs.writeFile(vscode.workspace.rootPath + '/.vscode/c_cpp_properties.json', JSON.stringify(new_c_settings));
+            }
         });
     });
 
