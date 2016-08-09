@@ -104,7 +104,7 @@ export function activate(context: vscode.ExtensionContext) {
                 includePath[i] = mingw_path + includePath[i];
             }
         }
-        fs.mkdir(vscode.workspace.rootPath + '.vscode/', (e) => {
+        fs.mkdir(vscode.workspace.rootPath + '/.vscode/', (e) => {
             fs.writeFile(vscode.workspace.rootPath + '/.vscode/launch.json', JSON.stringify(launch_json_content));
             fs.writeFile(vscode.workspace.rootPath + '/.vscode/tasks.json', JSON.stringify(tasks_json_content));
             if (new_c_settings.valid) {
