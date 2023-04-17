@@ -4,7 +4,7 @@ This extension was created to automate the creation of the launch.json, tasks.js
 
 ## Features
 
-Generates a the launch.json that enables VSCode to launch a C application and generates a task in tasks.json that compiles the source code.
+Generates a launch.json that enables VSCode to launch a C application and generates a task in tasks.json that compiles the source code.
 
 This extension has only one command: Generate Configurations and it overwrites the 4 files.
 
